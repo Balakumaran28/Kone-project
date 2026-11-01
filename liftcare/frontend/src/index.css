@@ -1,0 +1,170 @@
+/* LiftCare — Professional Elevator Management Platform */
+/* Design System: Restrained corporate elevator-industry aesthetic */
+
+:root {
+  /* Typography */
+  --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+  --font-mono: 'JetBrains Mono', 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, monospace;
+
+  /* Brand Palette — Deep Corporate Blue */
+  --brand-deep:       #0d2b4e;   /* darkest navy — hero, sidebar */
+  --brand-primary:    #123B63;   /* standard header/button navy */
+  --brand-action:     #1557A6;   /* interactive primary blue */
+  --brand-action-h:   #0f4a92;   /* hover state */
+  --brand-tint:       #e8f0f9;   /* light blue tint for accents */
+  --brand-border:     #b8cfe8;   /* subtle blue border */
+
+  /* Surface & Background */
+  --bg-page:          #F6F7F8;   /* warm neutral page backdrop */
+  --bg-surface:       #FFFFFF;
+  --bg-surface-alt:   #f1f4f7;
+  --bg-hover:         #eaecef;
+
+  /* Typography Scale */
+  --text-primary:     #172536;   /* near-black slate */
+  --text-body:        #2e3f52;   /* readable body text */
+  --text-secondary:   #637083;   /* muted supporting text */
+  --text-muted:       #8d9faf;   /* placeholders, hints */
+  --text-on-dark:     #ffffff;
+
+  /* Borders */
+  --border-light:     #e3e7ec;
+  --border-default:   #c9d3dd;
+  --border-strong:    #9aaaba;
+
+  /* Status Semantics */
+  --green:            #1a7f4b;
+  --green-bg:         #f0faf4;
+  --green-border:     #a7d9bb;
+
+  --amber:            #b45309;
+  --amber-bg:         #fffbeb;
+  --amber-border:     #f5d78a;
+
+  --red:              #b91c1c;
+  --red-bg:           #fff1f1;
+  --red-border:       #f5b8b8;
+
+  --blue:             #1557A6;
+  --blue-bg:          #eff5fd;
+  --blue-border:      #b3cef0;
+
+  /* Radius & Shadow */
+  --r-xs:  2px;
+  --r-sm:  4px;
+  --r-md:  6px;
+  --r-lg:  10px;
+  --r-xl:  16px;
+
+  --shadow-xs:  0 1px 2px rgba(15,30,50,0.06);
+  --shadow-sm:  0 1px 4px rgba(15,30,50,0.08);
+  --shadow-md:  0 4px 12px rgba(15,30,50,0.10);
+  --shadow-lg:  0 8px 24px rgba(15,30,50,0.12);
+
+  /* Z-levels */
+  --z-header: 200;
+  --z-modal:  1000;
+}
+
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: var(--font-sans);
+  background: var(--bg-page);
+  color: var(--text-primary);
+  line-height: 1.6;
+  min-height: 100vh;
+  -webkit-font-smoothing: antialiased;
+}
+
+code, pre, kbd {
+  font-family: var(--font-mono);
+  font-size: 0.875em;
+}
+
+a {
+  color: var(--brand-action);
+  text-decoration: none;
+  transition: color 0.15s;
+}
+a:hover { color: var(--brand-action-h); }
+
+button { font-family: inherit; }
+
+input, select, textarea { font-family: inherit; }
+
+
+/* =========================================================
+   BACKWARD-COMPATIBILITY ALIASES
+   Maps legacy CSS variable names (used throughout page
+   components) to the new design-system tokens above.
+   Do not remove — pages still reference these names.
+   ========================================================= */
+:root {
+  /* Brand / elevator-blue family */
+  --elevator-blue-dark:    var(--brand-deep);
+  --elevator-blue:         var(--brand-primary);
+  --elevator-blue-primary: var(--brand-action);
+  --elevator-blue-light:   var(--brand-tint);
+  --elevator-blue-border:  var(--brand-border);
+
+  /* Text */
+  --text-main:   var(--text-primary);
+  --text-light:  var(--text-muted);
+
+  /* Surfaces */
+  --bg-card:        var(--bg-surface);
+  --bg-secondary:   var(--bg-surface-alt);
+
+  /* Borders */
+  --border-subtle:  var(--border-light);
+  --border-dark:    var(--border-strong);
+
+  /* Safety semantic colours */
+  --safety-green:         var(--green);
+  --safety-green-bg:      var(--green-bg);
+  --safety-green-border:  var(--green-border);
+
+  --safety-amber:         var(--amber);
+  --safety-amber-bg:      var(--amber-bg);
+  --safety-amber-border:  var(--amber-border);
+
+  --safety-red:           var(--red);
+  --safety-red-bg:        var(--red-bg);
+  --safety-red-border:    var(--red-border);
+
+  --safety-blue:          var(--blue);
+  --safety-blue-bg:       var(--blue-bg);
+  --safety-blue-border:   var(--blue-border);
+
+  /* Radius */
+  --radius-xs: var(--r-xs);
+  --radius-sm: var(--r-sm);
+  --radius-md: var(--r-md);
+  --radius-lg: var(--r-lg);
+  --radius-xl: var(--r-xl);
+
+  /* Semantic danger/warning/success (used in form alerts) */
+  --danger-bg:      var(--red-bg);
+  --danger-border:  var(--red-border);
+  --danger-text:    var(--red);
+
+  --warning-bg:     var(--amber-bg);
+  --warning-border: var(--amber-border);
+  --warning-text:   var(--amber);
+
+  --success-bg:     var(--green-bg);
+  --success-border: var(--green-border);
+  --success-text:   var(--green);
+
+  /* Misc */
+  --accent-cyan:  var(--brand-action);
+}

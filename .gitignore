@@ -1,0 +1,43 @@
+# LiftCare — Elevator Issue Management and Automatic Escalation System
+# Root .gitignore
+
+# Dependencies and package directories
+node_modules/
+**/node_modules/
+
+# Build artifacts
+dist/
+dist-ssr/
+**/dist/
+target/
+**/target/
+*.class
+*.jar
+*.war
+
+# Environment and secrets
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+*.p12
+
+# Database files & local run data
+*.db
+*.sqlite
+*.sqlite3
+*.mv.db
+*.trace.db
+data/
+**/data/
+*.log
+logs/
+**/logs/
+
+# IDE & OS files
+.idea/
+.vscode/
+*.iml
+.DS_Store
+Thumbs.db
