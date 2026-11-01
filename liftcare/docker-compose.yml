@@ -1,0 +1,105 @@
+version: '3.8'
+
+# ==============================================================================
+# LiftCare — Building-Local Server Docker Compose Architecture
+# Deploys fully autonomous PostgreSQL, Spring Boot backend, and React/Nginx
+# frontend over an isolated local network with zero external internet dependency.
+# ==============================================================================
+
+services:
+  # ----------------------------------------------------------------------------
+  # 1. Local PostgreSQL Persistence Layer
+  # ----------------------------------------------------------------------------
+  postgres:
+    image: postgres:16-alpine
+    container_name: liftcare-postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: ${DB_NAME:-liftcare_db}
+      POSTGRES_USER: ${DB_USERNAME:-postgres}
+      POSTGRES_PASSWORD: ${DB_PASSWORD:-postgres}
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    ports:
+      - "${DB_PORT:-5432}:5432"
+    networks:
+      - liftcare-network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${DB_USERNAME:-postgres} -d ${DB_NAME:-liftcare_db}"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+      start_period: 10s
+
+  # ----------------------------------------------------------------------------
+  # 2. LiftCare Spring Boot 3 Local Application Server
+  # ----------------------------------------------------------------------------
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: liftcare-backend
+    restart: unless-stopped
+    depends_on:
+      postgres:
+        condition: service_healthy
+    environment:
+      SERVER_PORT: 8080
+      DB_URL: jdbc:postgresql://postgres:5432/${DB_NAME:-liftcare_db}
+      DB_USERNAME: ${DB_USERNAME:-postgres}
+      DB_PASSWORD: ${DB_PASSWORD:-postgres}
+      FLYWAY_ENABLED: "true"
+      JPA_DDL_AUTO: "validate"
+      FRONTEND_ORIGIN: ${FRONTEND_ORIGIN:-http://localhost,http://localhost:80,http://localhost:5173,http://127.0.0.1,http://127.0.0.1:80,http://127.0.0.1:5173,http://192.168.*:*,http://10.*:*,http://*.local:*}
+      JWT_SECRET: ${JWT_SECRET:-liftcare-development-secret-key-must-be-at-least-256-bits-long-32-bytes}
+      JWT_EXPIRATION_MS: ${JWT_EXPIRATION_MS:-86400000}
+      LIFTCARE_ENV: production-local
+      LIFTCARE_NODE_ID: ${LIFTCARE_NODE_ID:-building-local-node-01}
+    ports:
+      - "8080:8080"
+    networks:
+      - liftcare-network
+    healthcheck:
+      test: ["CMD", "wget", "-q", "--spider", "http://localhost:8080/api/health"]
+      interval: 10s
+      timeout: 5s
+      retries: 6
+      start_period: 35s
+
+  # ----------------------------------------------------------------------------
+  # 3. LiftCare React Frontend & Static Gateway (Nginx)
+  # ----------------------------------------------------------------------------
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: liftcare-frontend
+    restart: unless-stopped
+    depends_on:
+      backend:
+        condition: service_healthy
+    ports:
+      - "${FRONTEND_PORT:-80}:80"
+    networks:
+      - liftcare-network
+    healthcheck:
+      test: ["CMD", "wget", "-q", "--spider", "http://localhost/nginx-health"]
+      interval: 10s
+      timeout: 3s
+      retries: 3
+
+# ------------------------------------------------------------------------------
+# Persistent Storage Volumes
+# ------------------------------------------------------------------------------
+volumes:
+  postgres_data:
+    name: liftcare_postgres_data
+    driver: local
+
+# ------------------------------------------------------------------------------
+# Isolated Internal Network for Inter-Service Communication
+# ------------------------------------------------------------------------------
+networks:
+  liftcare-network:
+    name: liftcare_internal_network
+    driver: bridge
